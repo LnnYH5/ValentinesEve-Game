@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二月十三日薄暮</title>
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0b1018;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+}
+
+.phone-frame {
+  width: 100%;
+  max-width: 360px;
+  height: 90vh;
+  max-height: 700px;
+  background: #000;
+  border-radius: 40px;
+  padding: 10px;
+  box-shadow: 0 0 50px rgba(0,0,0,0.7);
+  position: relative;
+  overflow: hidden;
+}
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  background: #f2efe9;
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+}
+.phone-status {
+  height: 30px;
+  background: #000;
+  color: #fff;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+}
+
+.page {
+  padding: 28px 22px 80px;
+  height: calc(100% - 30px);
+  overflow-y: auto;
+  display: none;
+  line-height: 1.75;
+  scroll-behavior: auto;
+}
+.page.active {
+  display: block;
+}
+.page.thrill {
+  background: #111;
+  color: #e0e0e0;
+}
+.page.gift {
+  background: #fdf3e0;
+  color: #222;
+}
+
+.page-date {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+}
+.page-content {
+  font-size: 16px;
+  margin-bottom: 26px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.big-date {
+  font-size: 26px;
+  font-weight: 600;
+  text-align: center;
+  margin: 24px 0;
+  color: #ff4444;
+  filter: blur(1.5px);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+.option-btn {
+  background: #e7dbd1;
+  border: 0;
+  padding: 16px 20px;
+  border-radius: 16px;
+  text-align: left;
+  color: #222;
+  font-size: 16px;
+  cursor: pointer;
+}
+.page.thrill .option-btn {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.answer-input {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  border-radius: 16px;
+  border: 0;
+  background: #fff;
+  color: #222;
+  margin-bottom: 12px;
+}
+.submit-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  border: 0;
+  background: #007aff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.map-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 20px 0;
+}
+.map-point {
+  background: #e7dbd1;
+  border-radius: 14px;
+  padding: 14px 10px;
+  text-align: center;
+  cursor: pointer;
+  color: #222;
+  font-size: 15px;
+}
+.map-point.selected {
+  background: #007aff;
+  color: #fff;
+}
+
+.lottery-card {
+  display: none;
+  width: 100%;
+  max-width: 360px;
+  height: 100%;
+  background: #fff;
+  border-radius: 24px;
+  padding: 30px 24px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(0,0,0,0.4);
+}
+.lottery-card.active {
+  display: block;
+}
+.lottery-card h2 {
+  font-size: 22px;
+  margin-bottom: 24px;
+  color: #222;
+}
+.scratch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.scratch-item {
+  background: #e0e0e0;
+  border-radius: 12px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.scratch-item.opened {
+  background: #fdf3e0;
+  color: #222;
+  font-weight: 500;
+}
+
+.forum-card {
+  width: 100%;
+  background: #ffffffd9;
+  border-radius: 20px;
+  padding: 14px;
+  margin: 12px 0;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.forum-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #785e4c;
+}
+.forum-header span {
+  background: #e3d9d2;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+}
+.post {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd2c8;
+}
+.post:last-child {
+  border-bottom: none;
+}
+.post-title {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+.badge {
+  background: #c9b2a4;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 9px;
+  color: #251e1b;
+}
+.post-meta {
+  font-size: 10px;
+  color: #8b7a6b;
+}
+.post-preview {
+  font-size: 11px;
+  color: #3f332c;
+  padding-left: 6px;
+  border-left: 2px solid #bcaba0;
+}
+</style>
+</head>
+<body>
+
+<div class="phone-frame" id="phone">
+  <div class="phone-status">
+    <span>--:--</span>
+    <span>📶 🔋</span>
+  </div>
+  <div class="phone-screen">
+    <div id="pageRoot" class="page"></div>
+  </div>
+</div>
+
+<div class="lottery-card" id="lottery">
+  <h2>恭喜你，通关了💌</h2>
+  <div class="scratch-grid">
+    <div class="scratch-item" onclick="openLottery(this)">点开查看奖励 1</div>
+    <div class="scratch-item" onclick="openLottery(this)">点开查看奖励 2</div>
+    <div class="scratch-item" onclick="openLottery(this)">点开查看奖励 3</div>
+    <div class="scratch-item" onclick="openLottery(this)">点开查看奖励 4</div>
+    <div class="scratch-item" onclick="openLottery(this)">点开查看奖励 5</div>
+    <div class="scratch-item" onclick="openLottery(this)">点开查看奖励 6</div>
+  </div>
+  <div style="margin-top:24px;">
+    <button class="submit-btn" onclick="goFinalPage()">已全部看完，前往最终页</button>
+  </div>
+</div>
+
+<script>
+const pages = {
+1: {
+  date: '2月28日 09:03 · 动车上',
+  content: `今天是二月二十八日。
+我约了她在无锡见面。
+
+很早我就出门，天还没完全亮，三月的空气还是凉凉的。
+
+我上了动车，找到靠窗的位置坐下。
+
+我给她发微信：“我上车了，十点半到无锡。”
+
+“嗯嗯，我在保利广场那边等你。”
+
+保利广场。我愣了一下。那个地方我听说过，好像已经荒废挺久了。
+但我想她既然约在那儿，应该有她的理由。
+
+我退出了微信。窗外的田野往后跑，雾蒙蒙的。
+我靠着座位，开始想等会儿见到她要说些什么。`,
+  options: [{ text: '继续刷手机', next: 2 }]
+},
+2: {
+  date: '2月28日 09:28 · 动车上',
+  content: `动车开了大概二十分钟，我有点无聊，就刷了刷手机。
+
+翻到前几天她发给我的一个链接，是一个城市怪谈论坛。
+
+<div class="forum-card">
+    <div class="forum-header">
+        <span>🏮 城市传说讨论版 · 首页</span>
+    </div>
+    <div class="post">
+        <div class="post-title">有人在保利广场附近的巷子里迷路过吗？<span class="badge">热</span></div>
+        <div class="post-meta"><span>👤 无锡灵异君</span> · 昨天 23:14</div>
+        <div class="post-preview">我昨天走进去，绕了两个小时，最后手机日期变成2月30日，吓疯了……出来以后日期又正常了。</div>
+    </div>
+    <div class="post">
+        <div class="post-title">盘点无锡几个灵异地点的真实经历<span class="badge">精</span></div>
+        <div class="post-meta"><span>👤 老鬼</span> · 2月10日</div>
+        <div class="post-preview">第三篇：保利广场后巷，进去容易鬼打墙，老人说要用自己的记号才能走出来。</div>
+    </div>
+    <div class="post">
+        <div class="post-title">那个“13”的记号有人见过吗？<span class="badge">新</span></div>
+        <div class="post-meta"><span>👤 nightwalk</span> · 2月12日</div>
+        <div class="post-preview">我好像在巷子里看到墙角有像“13”的缺口，不知道是不是人为的……总觉得瘆得慌。</div>
+    </div>
+</div>
+
+有一条热帖说：
+“不要在傍晚进入保利广场的巷子，
+进去的人会在雾里迷路，
+手机会显示一个不存在的日期：2月30日。”
+
+我只当是故事，笑了笑，准备收起手机。`,
+  options: [{ text: '收起手机', next: 4 }]
+},
+4: {
+  date: '2月28日 10:30 · 无锡站',
+  content: `十点半，动车准时到站。我走出无锡站，雾还没散。
+
+我点开微信看了一眼，没有新消息。
+没有她的回复，也没有新的提示。
+
+我在出站口站了一会儿，看着人来人往。
+
+我打了辆车。司机问去哪儿，我说保利广场。
+司机从后视镜看了我一眼，没说话。`,
+  options: [{ text: '问司机关于保利广场的事', next: 5 }]
+},
+5: {
+  date: '2月28日 10:50 · 出租车',
+  content: `“师傅，保利广场那边现在什么情况？”
+
+司机沉默了几秒：“那边啊……早就没人了。以前挺热闹的，后来商场搬了，就荒了。”
+
+“荒了？”
+
+“嗯，空了好几年了。就剩个空壳子在那儿。偶尔有年轻人过去拍照，说是那种废墟风。”
+
+司机又说：“那边巷子多，容易迷路。以前有人进去就绕不出来了，得等人去找。”
+
+我看着窗外。雾越来越浓。`,
+  options: [{ text: '到达保利广场', next: 6 }]
+},
+6: {
+  date: '2月28日 11:10 · 保利广场',
+  content: `车停了。
+
+我站在保利广场前面——废弃的商场，锁着，全是灰。
+门口地砖碎了，缝隙里长着枯草。
+雾很大，只能看见几栋灰扑扑的轮廓。
+
+我又看了一眼微信，依旧没有消息。
+
+商场旁边有几条巷子，通向更黑、更深的地方。
+巷子很窄，墙很高，爬满枯藤。`,
+  options: [
+    { text: '走进左边那条巷子', next: 7 },
+    { text: '走向右边更窄的巷子', next: 7 }
+  ]
+},
+7: {
+  date: '2月28日 11:23 · 巷子里',
+  content: `巷子里雾更浓了。路又湿又滑。
+
+我一边走一边看手机。信号还在，但她还是没有消息。
+
+走了一会儿，前面出现岔路口。我选左边。
+又走一会儿，又是岔路口。
+
+这些巷子，长得一模一样。`,
+  options: [{ text: '继续往前走', next: 8 }]
+},
+8: {
+  date: '2月28日 ?? · 迷失',
+  content: `每条巷子都一样。每个岔路口都一样。
+我用钥匙在墙上划了一道印子。
+
+然后，我看见了那道印子。
+
+我绕回来了。
+
+我被困住了。`,
+  options: [{ text: '拿出手机看时间', next: 9 }]
+},
+9: {
+  date: '？？',
+  content: `我拿出手机，想看看时间。屏幕亮起来的时候，我愣住了。
+
+屏幕上显示的日期是：`,
+  bigDate: '2月30日',
+  extra: `我揉了揉眼睛。2月30日？哪有这个日子？
+
+我退出重进，还是一样。
+时间在走，日期却是假的。
+
+我突然想起刚才看到的论坛帖子。
+心一下子沉了下去，手开始发抖。`,
+  thrill: true,
+  options: [{ text: '继续往前走', next: 10 }]
+},
+10: {
+  date: '2月30日 13:55',
+  content: `雾浓得几乎看不见路。
+
+手机自己亮了，一行字慢慢出现：
+
+“你本来是要去见谁？
+TA的生日是几月几号？请输入四位数字。”`,
+  input: true,
+  placeholder: '示例：0101',
+  correct: '0512',
+  next: 11,
+  thrill: true
+},
+11: {
+  date: '2月30日 14:02',
+  content: `手机轻轻震动了一下。
+
+第二个问题出现了：
+
+“你和你要见的这个人，
+一起去过哪些城市？”
+
+点击你记得的每一个地方。`,
+  mapPick: true,
+  list: ['杭州','苏州','南京','上海','宁波','无锡','厦门','扬州'],
+  correct: ['苏州','南京','上海','厦门'],
+  next: 12,
+  thrill: true
+},
+12: {
+  date: '2月30日 14:08',
+  content: `最后一个问题，很轻，很清晰：
+
+“你们在南京正式见面的那一天，
+是几月几号？请输入四位数字。”`,
+  input: true,
+  placeholder: '示例：0101',
+  correct: '1108',
+  next: 13,
+  thrill: true
+},
+13: {
+  date: '2月13日 · 家里',
+  content: `我猛地睁开眼。
+
+房间很暗，只有手机屏幕微微发光。
+我躺在床上，心跳得很快。
+
+我拿起手机。
+日期：2月13日。
+
+没有雾，没有巷子，没有2月30日。
+一切都是一场太真实的梦。
+我根本就没出门。
+
+手机轻轻震了一下。
+是她发来的消息。`,
+  gift: true,
+  options: [{ text: '点开消息', next: 14 }]
+},
+14: {
+  date: '2月13日 夜里',
+  content: `"醒了？"
+
+"情人节快乐。"
+
+我愣了愣，回她："你怎么知道我刚醒？"
+
+她发了个偷笑的表情。
+
+"节日快乐。
+我们很快就会见面的。"
+
+我看着屏幕，安静地笑了。
+窗外已经很深、很静了。`,
+  gift: true,
+  options: [{ text: '结束游戏 → 开奖', next: 'end' }]
+},
+end: {},
+finalPage: {
+  date: '',
+  content: `
+
+恭喜你有幸见证本人的第一个html小游戏，
+就算做得烂烂的也不许骂我，我已急哭。
+因为是很临时想做的礼物，所以在赶进度，可能也并不是很完善...
+总之不可以喷我！！！！
+
+太可怕了。我刚发现11月8日距离现在还没到100天。
+为什么我感觉时间过了很久很久？！
+可能我们认识已经有一年了。
+中间又发生过很多事情，我有时候会担心很多。
+
+我们最近也刚刚和好，所以有的时候会患得患失，
+但是你找我聊天我就特别开心，
+我还是觉得你很好。
+我希望我们可以这样好好的。
+
+你补药再说我们不好你也要好好的了。
+我会感觉眼睛酸酸的。
+
+最近游戏有点玩得太多了，很想吐，
+于是打算极限做一个小游戏挂GitHub，
+当成一个情人节礼物！！！
+
+还有小丑牌。都是一些电子礼物来的。
+虽然是AI的小剧本和小编程，但是本人一直在狠狠调教这个prompt
+大概从七点多做到九点五十，现在打算再润一下。
+估计要三四个小时才能把这个做完
+正好可以赶上情人节
+
+情人节快乐！
+快要100天了这个也快乐 ^^
+快点见面呀我好想你。
+你是世界上最好的宝宝。
+`,
+  options: [{ text: '完成', next: 'final' }]
+},
+final: {}
+};
+
+const rewards = [
+  "奖励一：狠狠做！请尝试新姿势",
+  "奖励二：奈雪奶茶 指定一瓶",
+  "奖励三：抱着你从背后责😋",
+  "奖励四：狠狠踩你😡",
+  "奖励五：见面顺利 天天开心",
+  "奖励六：一直好好的"
+];
+
+let current = 1;
+const root = document.getElementById('pageRoot');
+const phone = document.getElementById('phone');
+const lottery = document.getElementById('lottery');
+let selectedCities = [];
+
+function render(id) {
+  current = id;
+  
+  // 每次翻页都回到顶部
+  root.scrollTop = 0;
+
+  if (id === 'end') {
+    phone.style.display = 'none';
+    lottery.classList.add('active');
+    return;
+  }
+  
+  if (id === 'final') {
+    alert("游戏结束 ❤️ 情人节快乐！");
+    return;
+  }
+
+  const p = pages[id];
+  if (!p) return;
+
+  let html = `<div class="page-date">${p.date}</div>`;
+  html += `<div class="page-content">${p.content}</div>`;
+  if (p.bigDate) html += `<div class="big-date">${p.bigDate}</div>`;
+  if (p.extra) html += `<div class="page-content">${p.extra}</div>`;
+
+  if (p.input) {
+    html += `<input class="answer-input" id="ans" placeholder="${p.placeholder}">`;
+    html += `<button class="submit-btn" onclick="checkInput()">提交答案</button>`;
+  }
+  if (p.mapPick) {
+    selectedCities = [];
+    html += '<div class="map-grid">';
+    p.list.forEach(c => {
+      html += `<div class="map-point" onclick="toggleCity('${c}')">${c}</div>`;
+    });
+    html += '</div>';
+    html += `<button class="submit-btn" onclick="checkMap()">提交</button>`;
+  }
+  if (p.options) {
+    html += '<div class="options">';
+    p.options.forEach(o => {
+      html += `<div class="option-btn" onclick="render('${o.next}')">${o.text}</div>`;
+    });
+    html += '</div>';
+  }
+
+  root.className = 'page';
+  if (p.thrill) root.classList.add('thrill');
+  if (p.gift) root.classList.add('gift');
+  root.classList.add('active');
+  root.innerHTML = html;
+}
+
+function goFinalPage() {
+  lottery.classList.remove('active');
+  phone.style.display = 'block';
+  render('finalPage');
+}
+
+function toggleCity(city) {
+  const el = event.currentTarget;
+  el.classList.toggle('selected');
+  if (selectedCities.includes(city)) {
+    selectedCities = selectedCities.filter(x => x !== city);
+  } else {
+    selectedCities.push(city);
+  }
+}
+
+function checkInput() {
+  const p = pages[current];
+  const v = document.getElementById('ans').value.trim();
+  if (v === p.correct) {
+    alert('正确');
+    render(p.next);
+  } else {
+    alert('不对，再想想');
+  }
+}
+
+function checkMap() {
+  const correct = ['苏州','南京','上海','厦门'];
+  const ok = JSON.stringify(selectedCities.sort()) === JSON.stringify(correct.sort());
+  if (ok) {
+    alert('正确');
+    render(12);
+  } else {
+    alert('不对，再好好回忆一下');
+  }
+}
+
+function openLottery(el) {
+  const i = [...el.parentElement.children].indexOf(el);
+  el.innerText = rewards[i];
+  el.classList.add('opened');
+}
+
+render(1);
+</script>
+</body>
+</html>
